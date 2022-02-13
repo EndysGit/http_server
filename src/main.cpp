@@ -19,7 +19,7 @@ public:
     ~Application() = default;
 };
 
-class TestTaskApp : public Application {
+class TestTaskApp final : public Application {
 public:
     TestTaskApp() = default;
 
@@ -27,7 +27,9 @@ public:
         try {
             m_httpServer.addResolver("/api", std::make_unique<Api>());
             m_httpServer.addResolver("/test", std::make_unique<Test>());
-            m_httpServer.start();
+
+            constexpr auto configPath{"config/tcp_srv.cfg"};
+            m_httpServer.start(Config{ configPath });
         } catch (...) {
             return 1;
         }

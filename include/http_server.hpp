@@ -24,10 +24,7 @@ namespace cwt_http {
             m_resolvers.emplace(resolverPath, move(resolver));
         }
 
-        void start() {
-            constexpr auto configPath{"config/tcp_srv.cfg"};
-            Config config{ configPath };
-
+        void start(Config<std::string, std::string>&& config) {
             auto ipAddress = QHostAddress(config.get("ipAddress").data());
             auto port = std::stoi(config.get("port"));
             auto maxPendingConnections = std::stoi(
@@ -45,7 +42,7 @@ namespace cwt_http {
         TransporLayerServerType m_server;
         std::unordered_map<std::string, std::unique_ptr<Resolver>> m_resolvers;
 
-        HttpResponse processRequest(const HttpRequest& request) {
+        HttpResponse dispatch(const HttpRequest& request) {
             auto&& requestTargetPath = request.getStartLine().getRequestTarget().path;
 
             auto resolverIt = m_resolvers.find(requestTargetPath);
@@ -76,7 +73,7 @@ namespace cwt_http {
             }
         }
 
-        void processConnection(QTcpSocket *connection) {
+        void dispatch(QTcpSocket *connection) {
             std::cout << "New accepted connection: "
                       << connection->peerAddress().toString().toStdString()
                       << '\n';
@@ -89,7 +86,7 @@ namespace cwt_http {
                 // here need move
                 HttpRequest request{ connection->readAll().toStdString() };
                 printRequest(request);
-                auto response = processRequest(request);
+                auto response = dispatch(request);
 
                 connection->write(QByteArray::fromStdString(response.toString()));
                 connection->waitForBytesWritten();
@@ -102,7 +99,7 @@ namespace cwt_http {
         void serverLoop() {
             while (m_server.isListening()) {
                 if (m_server.hasPendingConnections()) {
-                    processConnection(m_server.nextPendingConnection());
+                    dispatch(m_server.nextPendingConnection());
                 } else {
                     m_server.waitForNewConnection(1);
                 }

@@ -18,6 +18,23 @@
 #include <unordered_map>
 
 namespace cwt_http {
+    std::unordered_map<std::string, std::string> parseQuery(const std::string& query) {
+        std::unordered_map<std::string, std::string> queryMap;
+
+        std::istringstream is{ query };
+        std::string keyValuePair;
+        while (std::getline(is, keyValuePair, '&')) {
+            std::istringstream kvs{ keyValuePair };
+            std::string key;
+            getline(kvs, key, '=');
+            std::string value;
+            getline(kvs, value);
+            queryMap.emplace(key, value);
+        }
+
+        return queryMap;
+    }
+
     template <typename PathT = std::string, typename QueryT = std::string>
     struct RequestTarget {
         using PathType = PathT;
