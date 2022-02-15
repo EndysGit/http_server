@@ -7,11 +7,7 @@
 
 #include "http_core.hpp"
 
-#include <utility>
-#include <iterator>
-#include <sstream>
-
-namespace cwt_http::core {
+namespace experimental {
     struct RequestLineTag{};
     struct ResponseLineTag{};
 
@@ -22,8 +18,8 @@ namespace cwt_http::core {
                       std::is_base_of_v<ResponseLineTag, value_type>,
                       "Bad start line type");
 
-        static void read(std::istream&, value_type&);
-        static void write(std::ostream&, value_type&);
+        //static void read(std::istream&, value_type&);
+        //static void write(std::ostream&, value_type&);
     };
 
     template <typename HeadersT>
@@ -32,20 +28,20 @@ namespace cwt_http::core {
         using key_type = typename HeadersT::key_type;
         using value_type = typename HeadersT::mapped_type;
 
-        static void read(std::istream&, header_type&);
-        static void write(std::ostream&, header_type&);
+        //static void read(std::istream&, header_type&);
+        //static void write(std::ostream&, header_type&);
     };
 
     template <typename BodyT>
     struct BodyTrait {
         using value_type = typename BodyT::value_type;
 
-        static void read(std::istream&, value_type&);
-        static void write(std::ostream&, value_type&);
+        //static void read(std::istream&, value_type&);
+        //static void write(std::ostream&, value_type&);
     };
 
     template<typename StartLineT, typename HeadersT, typename BodyT>
-    class HttpMessage : public StartLineT {
+    class HttpMessage {
     public:
         using StartLineType = typename StartLineTrait<StartLineT>::value_type;
         using HeadersType = HeadersT;
@@ -57,50 +53,43 @@ namespace cwt_http::core {
 
         // Need add checkss
         template<typename ... Args>
-        explicit HttpMessage(Args&& ... args) : m_startLine(std::forward<Args>(args)...) {
+        explicit HttpMessage(Args&& ... args) : m_start_line(std::forward<Args>(args)...) {
         }
 
-        explicit HttpMessage(std::iostream& requestStream) {
-            StartLineType::write(requestStream, m_startLine);
+        explicit HttpMessage(const std::string& request) {
+            std::istringstream requestStream{ request };
+
+            StartLineType::write(requestStream, m_start_line);
             HeadersType::write(requestStream, m_headers);
             BodyType::write(requestStream, m_body);
         }
 
-        explicit HttpMessage(const std::string& request)
-        : HttpMessage(std::stringstream(request)) {
-
+        StartLineType& start_line() {
+            return m_start_line;
         }
 
-        StartLineType& startLine() & {
-            return m_startLine;
+        const StartLineType& start_line() const {
+            return m_start_line;
         }
 
-        const StartLineType& startLine() const & {
-            return m_startLine;
-        }
-
-        HeadersType& headers() & {
+        HeadersType& headers() {
             return m_headers;
         }
 
-        const HeadersType& headers() const & {
+        const HeadersType& headers() const {
             return m_headers;
         }
 
-        BodyType& body() & {
+        BodyType& body() {
             return m_body;
         }
 
-        const BodyType& body() const & {
+        const BodyType& body() const {
             return m_body;
-        }
-
-        std::string toString() const {
-            return std::string();
         }
 
     private:
-        StartLineType m_startLine;
+        StartLineType m_start_line;
         HeadersType m_headers;
         BodyType m_body;
     };

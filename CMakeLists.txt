@@ -13,7 +13,7 @@ endif()
 set(INCLUDE_DIRS include)
 include_directories(${INCLUDE_DIRS})
 
-add_executable(${PROJECT_NAME} src/main.cpp include/http_request.h include/http_response.hpp include/http_message.hpp include/http_core.hpp include/config.hpp include/api.hpp include/test.hpp include/resolver.hpp include/http_server.hpp include/http_header.hpp include/http_body.hpp include/database.hpp)
+add_executable(${PROJECT_NAME} src/main.cpp include/HttpRequest.hpp include/HttpResponse.hpp include/http_message.hpp include/http_core.hpp include/Config.hpp include/ApiResolver.hpp include/TestResolver.hpp include/Resolver.hpp include/HttpServer.hpp include/HttpHeader.hpp include/HttpBody.hpp include/Database.hpp include/Application.hpp src/TestTaskApp.cpp include/TestTaskApp.hpp src/ApiResolver.cpp src/TestResolver.cpp src/HttpServer.cpp include/HttpMessageBase.hpp src/Database.cpp src/HttpRequest.cpp src/HttpResponse.cpp src/HttpBody.cpp src/HttpHeader.cpp src/http_core.cpp)
 
 set(CMAKE_PREFIX_PATH "/home/endyxx/Applications/Qt/5.15.2/gcc_64")
 
