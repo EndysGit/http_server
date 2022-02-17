@@ -5,7 +5,6 @@
 #ifndef QTHTTPSERVER_TEST_CONFIG_HPP
 #define QTHTTPSERVER_TEST_CONFIG_HPP
 
-#include <iostream>
 #include <fstream>
 #include <stdexcept>
 #include <utility>
@@ -41,8 +40,7 @@ public:
             key_type key;
             value_type value;
             in >> key >> value;
-            auto date_it = m_data.emplace(std::move(key), std::move(value));
-            std::cout << date_it.first->first << ' ' << date_it.first->second << '\n';
+            m_data.emplace(std::move(key), std::move(value));
         }
     }
 

@@ -1,6 +1,6 @@
-#include "http_server.hpp"
-#include "api.hpp"
-#include "test.hpp"
+#include "TestTaskApp.hpp"
+
+#include <memory>
 
 /*
  * Реализовать REST http сервер, используя Qt и класс QTcpServer.
@@ -12,31 +12,6 @@
  * Использовать сторонние библиотеки запрещено.
  * Для обработки запросов рекомендуется переопределить виртуальный метод QTcpServer::incomingConnection.
  */
-
-class Application {
-public:
-    virtual int run() = 0;
-    ~Application() = default;
-};
-
-class TestTaskApp : public Application {
-public:
-    TestTaskApp() = default;
-
-    int run() override {
-        try {
-            m_httpServer.addResolver("/api", std::make_unique<Api>());
-            m_httpServer.addResolver("/test", std::make_unique<Test>());
-            m_httpServer.start();
-        } catch (...) {
-            return 1;
-        }
-
-        return 0;
-    }
-private:
-    cwt_http::HttpServer m_httpServer;
-};
 
 int main() {
     auto testApp = std::make_unique<TestTaskApp>();

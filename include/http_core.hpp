@@ -8,6 +8,11 @@
 #include <string>
 #include <string_view>
 
+// Experimental dependencies
+#include <utility>
+#include <iterator>
+#include <sstream>
+
 namespace cwt_http::core {
     constexpr auto http_1_0 = std::string_view("HTTP/1.0");
     constexpr auto http_1_1 = std::string_view("HTTP/1.1");
@@ -20,34 +25,8 @@ namespace cwt_http::core {
         UNSUPPORTED
     };
 
-    HttpVersion string2HttpVersion(const std::string &protocol) {
-        if (protocol == http_1_0) {
-            return HttpVersion::HTTP_1_0;
-        } else if (protocol == http_1_1) {
-            return HttpVersion::HTTP_1_1;
-        } else if (protocol == http_2_0) {
-            return HttpVersion::HTTP_2_0;
-        } else {
-            return HttpVersion::UNSUPPORTED;
-        }
-    }
-
-    std::string HttpVersion2string(HttpVersion protocol) {
-        using std::string;
-        // TODO add exceptional situation in case of invalid protocol
-        switch (protocol) {
-            case HttpVersion::HTTP_1_0:
-                return string(http_1_0);
-            case HttpVersion::HTTP_1_1:
-                return string(http_1_1);
-            case HttpVersion::HTTP_2_0:
-                return string(http_2_0);
-            default:
-                break;
-        }
-
-        return string{};
-    }
+    HttpVersion string2HttpVersion(const std::string &protocol);
+    std::string HttpVersion2string(HttpVersion protocol);
 
     constexpr auto getMethod = std::string_view("GET");
     constexpr auto postMethod = std::string_view("POST");
@@ -62,20 +41,8 @@ namespace cwt_http::core {
         UNSUPPORTED
     };
 
-    HttpMethod string2HttpMethod(const std::string &method) {
-        if (method == getMethod) {
-            return HttpMethod::GET;
-        } else if (method == postMethod) {
-            return HttpMethod::POST;
-        } else if (method == putMethod) {
-            return HttpMethod::PUT;
-        } else if (method == deleteMethod) {
-            return HttpMethod::DELETE;
-        } else {
-            return HttpMethod::UNSUPPORTED;
-        }
-    }
-
+    HttpMethod string2HttpMethod(const std::string &method);
+    std::string HttpMethod2string(HttpMethod method);
 
     enum class HttpStatusCode {
         CONTINUE = 100,
