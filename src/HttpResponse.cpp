@@ -2,7 +2,7 @@
 
 namespace cwt_http {
     void StatusLine::write(std::istream& in, StatusLine& statusLine) {
-
+        //TODO implement
     }
 
     std::string

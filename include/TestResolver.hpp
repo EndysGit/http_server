@@ -9,7 +9,7 @@
 #include "HttpResponse.hpp"
 #include "Resolver.hpp"
 
-class TestResolver : public cwt_http::Resolver {
+class TestResolver final : public cwt_http::Resolver {
 public:
     [[nodiscard]] cwt_http::HttpResponse getMethod(const cwt_http::HttpRequest& request) const override;
 };

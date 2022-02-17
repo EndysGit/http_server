@@ -1,12 +1,19 @@
 #include "HttpHeader.hpp"
 
+#include <sstream>
+#include <iterator>
+#include <algorithm>
 #include <string>
 
 namespace cwt_http {
     void
-    HttpHeader::write(std::istream &in, HttpHeader &header) {
+    HttpHeader::write(std::istream &in, HttpHeader& header) {
         using std::string;
         using std::istringstream;
+
+        while (std::isspace(in.peek())) {
+            in.get();
+        }
 
         std::string headerLine;
         while (getline(in, headerLine)) {

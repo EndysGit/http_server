@@ -6,9 +6,6 @@
 #define QTHTTPSERVER_TEST_HTTPHEADER_HPP
 
 #include <iostream>
-#include <sstream>
-#include <algorithm>
-#include <iterator>
 #include <unordered_map>
 
 namespace cwt_http {
@@ -66,7 +63,7 @@ namespace cwt_http {
             return m_headers.cend();
         }
 
-        virtual std::string toString() const;
+        std::string toString() const;
     private:
         Container m_headers;
     };

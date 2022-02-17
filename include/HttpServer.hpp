@@ -6,7 +6,6 @@
 #define QTHTTPSERVER_TEST_HTTPSERVER_HPP
 
 #include "Config.hpp"
-#include "http_core.hpp"
 #include "Resolver.hpp"
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
@@ -30,7 +29,7 @@ namespace cwt_http {
         TransporLayerServerType m_server;
         ResolversContainerType m_resolvers;
 
-        HttpResponse dispatch(const HttpRequest& request) const;
+        HttpResponse getResponse(const std::string &requestData) const;
 
         void processConnection(QTcpSocket *connection);
         void serverLoop();

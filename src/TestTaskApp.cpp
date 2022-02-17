@@ -5,8 +5,10 @@
 #include "ApiResolver.hpp"
 #include "TestResolver.hpp"
 #include "TestTaskApp.hpp"
+#include "Config.hpp"
 
-int TestTaskApp::run() {
+int
+TestTaskApp::run() {
     try {
         m_httpServer.addResolver("/api", std::make_unique<ApiResolver>());
         m_httpServer.addResolver("/test", std::make_unique<TestResolver>());

@@ -50,7 +50,7 @@ namespace cwt_http {
             return m_statusLine;
         }
 
-        [[nodiscard]] std::string toString() const override {
+        [[nodiscard]] std::string toString() const  {
             return m_statusLine.toString()
             .append(HttpHeader::toString())
             .append(HttpBody::toString());

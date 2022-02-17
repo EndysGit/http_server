@@ -33,11 +33,8 @@ private:
     table_type m_data;
 };
 
-// Consider use of reference_wrapper
-static Database& getDatabaseInstanceRef() {
-    static Database database;
-    return database;
-}
+Database& getDataDatabaseRef();
+Database& getLogDatabaseRef();
 
 
 #endif //QTHTTPSERVER_TEST_DATABASE_HPP

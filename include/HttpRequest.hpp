@@ -38,7 +38,6 @@ namespace cwt_http {
     private:
         PathType m_path;
         QueryType m_query;
-        std::unordered_map<std::string, std::string> m_mapped_query;
     };
 
     class RequestLine final {
@@ -47,6 +46,7 @@ namespace cwt_http {
         using RequestTargetType = RequestTarget;
         using ProtocolType = core::HttpVersion;
 
+        // fixme remove default OR add setters
         RequestLine() = default;
         RequestLine(MethodType method,
                     RequestTargetType requestTarget,
@@ -86,7 +86,7 @@ namespace cwt_http {
         ProtocolType m_protocol;
     };
 
-    class HttpRequest : public core::HttpMessageBase {
+    class HttpRequest final : public core::HttpMessageBase {
     public:
         using StartLineType = RequestLine;
 
@@ -99,12 +99,13 @@ namespace cwt_http {
                                     protocol} {}
         // Make it for move semantics
         explicit HttpRequest(const std::string &request);
+        explicit HttpRequest(std::string_view request);
 
         [[nodiscard]] const StartLineType& getStartLine() const {
             return m_requestLine;
         }
 
-        [[nodiscard]] std::string toString() const override {
+        [[nodiscard]] std::string toString() const  {
             return m_requestLine.toString()
                     .append(HttpHeader::toString())
                     .append(HttpBody::toString());

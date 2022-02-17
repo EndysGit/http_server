@@ -4,9 +4,6 @@
 
 #include "HttpServer.hpp"
 
-#include <QTcpSocket>
-#include <QHostAddress>
-
 namespace cwt_http {
     void
     HttpServer::addResolver(const std::string& resolverPath, std::unique_ptr<Resolver> resolver) {
@@ -31,10 +28,12 @@ namespace cwt_http {
 
     void
     HttpServer::serverLoop() {
+        // TODO: Reduce busy wait
         while (m_server.isListening()) {
             if (m_server.hasPendingConnections()) {
                 // This code should be in other thread
-                // ThreadPool.doWork(dispatchConnection, m_server.nextPendingConnection());
+                // ThreadPool::doWork(dispatchConnection, m_server.nextPendingConnection());
+                // In thread pool should be task queue which few threads uses to get task
                 processConnection(m_server.nextPendingConnection());
             } else {
                 m_server.waitForNewConnection(1);
@@ -50,16 +49,13 @@ namespace cwt_http {
                   << '\n';
 
         if (connection->isOpen() && connection->isReadable() &&
-            connection->isWritable()) {
-            // this code should be moved to another thread and called there
-            //
+            connection->isWritable())
+        {
             connection->waitForReadyRead();
 
-            HttpRequest request{ connection->readAll().toStdString() };
-            printRequest(request);
-            auto response = dispatch(request);
+            auto responseData = getResponse(connection->readAll().toStdString()).toString();
+            connection->write(responseData.data(), responseData.size());
 
-            connection->write(QByteArray::fromStdString(response.toString()));
             connection->waitForBytesWritten();
             connection->close();
         } else {
@@ -68,7 +64,10 @@ namespace cwt_http {
     }
 
     HttpResponse
-    HttpServer::dispatch(const HttpRequest& request) const {
+    HttpServer::getResponse(const std::string &requestData) const {
+        HttpRequest request{ requestData };
+
+        printRequest(request);
         auto&& requestTargetPath = request.getStartLine().getRequestTarget().path();
 
         auto resolverIt = m_resolvers.find(requestTargetPath);

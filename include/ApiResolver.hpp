@@ -9,7 +9,7 @@
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
 
-class ApiResolver : public cwt_http::Resolver {
+class ApiResolver final : public cwt_http::Resolver {
 public:
     [[nodiscard]] cwt_http::HttpResponse getMethod(const cwt_http::HttpRequest& request) const override;
     [[nodiscard]] cwt_http::HttpResponse postMethod(const cwt_http::HttpRequest& request) const override;

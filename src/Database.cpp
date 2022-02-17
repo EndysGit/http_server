@@ -7,7 +7,7 @@ Database::query_result_type
 Database::insertQuery(const mapped_type& value) {
     static unsigned long uid{ 0ul };
 
-    auto rowIt = m_data.emplace(std::to_string(uid), value);
+    auto rowIt = m_data.try_emplace(std::to_string(uid), value);
     ++uid;
     if (rowIt.second) {
         return std::make_pair(rowIt.first->first, rowIt.first->second);
@@ -18,7 +18,7 @@ Database::insertQuery(const mapped_type& value) {
 
 Database::query_result_type
 Database::insertQuery(const key_type& key, const mapped_type& value) {
-    auto rowIt = m_data.emplace(key, value);
+    auto rowIt = m_data.try_emplace(key, value);
     if (rowIt.second) {
         return std::make_pair(rowIt.first->first, rowIt.first->second);
     }
@@ -66,4 +66,14 @@ Database::deleteQuery(const key_type& key) {
     }
 
     return std::nullopt;
+}
+
+Database& getDataDatabaseRef() {
+    static Database database;
+    return database;
+}
+
+Database& getLogDatabaseRef() {
+    static Database logDatabase;
+    return logDatabase;
 }

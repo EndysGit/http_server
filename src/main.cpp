@@ -13,7 +13,6 @@
  * Для обработки запросов рекомендуется переопределить виртуальный метод QTcpServer::incomingConnection.
  */
 
-
 int main() {
     auto testApp = std::make_unique<TestTaskApp>();
     return testApp->run();

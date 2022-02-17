@@ -31,7 +31,6 @@ namespace cwt_http {
         }
     }
 
-
     void
     RequestLine::write(std::istream &in, RequestLine &requestLine) {
         using std::string;
@@ -50,6 +49,10 @@ namespace cwt_http {
         string protocolVersion;
         ok = ok && (in >> protocolVersion);
         requestLine.m_protocol = core::string2HttpVersion(protocolVersion);
+
+        if (!ok) {
+            throw "Failed to parse request line";
+        }
     }
 
     std::string
@@ -74,16 +77,6 @@ namespace cwt_http {
     }
 
     void printRequest(const HttpRequest& request) {
-        std::cout << static_cast<int>(request.getStartLine().getMethod()) << ' '
-                  << request.getStartLine().getPath() << '?' << request.getStartLine().getQuery() << ' '
-                  << core::HttpVersion2string(request.getStartLine().getProtocol()) << '\n';
-
-        std::cout << "Headers:\n";
-        for (const auto& header: request.headers()) {
-            std::cout << header.first << ": " << header.second << '\n';
-        }
-
-        std::cout << "Body:\n";
-        std::cout << request.body() << '\n' << '\n';
+        std::cout << request.toString() << '\n';
     }
 }

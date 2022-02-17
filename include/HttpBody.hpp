@@ -26,7 +26,7 @@ namespace cwt_http {
         }
 
     protected:
-        [[nodiscard]] virtual std::string toString() const {
+        [[nodiscard]] std::string toString() const {
             return m_body;
         }
 
