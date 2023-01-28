@@ -9,6 +9,7 @@ project(QtHttpServerTestTask
         DESCRIPTION "Simple http server"
         LANGUAGES CXX)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Add include dir
 set(INCLUDE_DIRS include)
 include_directories(${INCLUDE_DIRS})
@@ -19,7 +20,7 @@ add_library(cwt_http STATIC src/HttpRequest.cpp  include/HttpRequest.hpp
                             src/HttpHeader.cpp   include/HttpHeader.hpp
                             src/http_core.cpp    include/http_core.hpp)
 target_include_directories(cwt_http PUBLIC include)
-target_compile_features(cwt_http PUBLIC cxx_std_17)
+
 if (MSVC)
     target_compile_options(cwt_http PUBLIC /W4)
 else()
@@ -44,3 +45,9 @@ find_package(Qt5 COMPONENTS Network REQUIRED)
 if(TARGET Qt5::Network)
     target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core Qt5::Network)
 endif()
+
+find_package(PostgreSQL 14.2 REQUIRED)
+if (PostgreSQL_FOUND)
+    target_link_libraries(${PROJECT_NAME} PRIVATE PostgreSQL::PostgreSQL)
+endif()
+

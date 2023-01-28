@@ -38,3 +38,4 @@ namespace cwt_http {
 }
 
 #endif //QTHTTPSERVER_TEST_RESOLVER_HPP
+

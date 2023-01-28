@@ -15,7 +15,8 @@ TestTaskApp::run() {
 
         constexpr auto configPath{"config/tcp_srv.cfg"};
         m_httpServer.start(Config{ configPath });
-    } catch (...) {
+    } catch (std::exception& e) {
+        std::cerr << e.what() << '\n';
         return 1;
     }
 
